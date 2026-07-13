@@ -18,7 +18,6 @@ export default function CustomCursor() {
     const outlineMoveX = gsap.quickTo(outline, 'x', { duration: 0.5, ease: 'power2.out' });
     const outlineMoveY = gsap.quickTo(outline, 'y', { duration: 0.5, ease: 'power2.out' });
 
-    // Store named handler references so we can properly remove them
     const handleMouseMove = (e: MouseEvent) => {
       dotMoveX(e.clientX);
       dotMoveY(e.clientY);
@@ -26,28 +25,29 @@ export default function CustomCursor() {
       outlineMoveY(e.clientY);
     };
 
-    // Hover state expansion for interactive elements
-    const addHoverClass = () => outline.classList.add('hovering');
-    const removeHoverClass = () => outline.classList.remove('hovering');
+    // Use event delegation on window so dynamically rendered elements are covered
+    const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, label, .cursor-hover';
 
-    const interactiveElements = document.querySelectorAll<Element>(
-      'a, button, [role="button"], input, textarea, .cursor-hover'
-    );
+    const handleMouseOver = (e: MouseEvent) => {
+      if ((e.target as Element).closest(INTERACTIVE)) {
+        outline.classList.add('hovering');
+      }
+    };
 
-    interactiveElements.forEach((el) => {
-      el.addEventListener('mouseenter', addHoverClass);
-      el.addEventListener('mouseleave', removeHoverClass);
-    });
+    const handleMouseOut = (e: MouseEvent) => {
+      if ((e.target as Element).closest(INTERACTIVE)) {
+        outline.classList.remove('hovering');
+      }
+    };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mouseout', handleMouseOut);
 
     return () => {
-      // Properly remove named handlers — anonymous functions would NOT work here
       window.removeEventListener('mousemove', handleMouseMove);
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', addHoverClass);
-        el.removeEventListener('mouseleave', removeHoverClass);
-      });
+      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mouseout', handleMouseOut);
     };
   }, []);
 
@@ -60,7 +60,7 @@ export default function CustomCursor() {
       />
       <div
         ref={outlineRef}
-        className="custom-cursor cursor-outline fixed top-0 left-0 w-8 h-8 border border-primary/40 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-[width,height,background-color] duration-300 ease-out"
+        className="custom-cursor cursor-outline fixed top-0 left-0 w-8 h-8 border border-primary/40 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-[width,height,background-color,border-color,box-shadow] duration-300 ease-out"
         aria-hidden="true"
       />
     </>

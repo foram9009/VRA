@@ -92,3 +92,59 @@ body {
     @apply text-text-secondary;
   }
 }
+
+/* ── Scroll Reveal (initial state — GSAP animates to visible) ─────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+}
+
+/* ── Custom Cursor Hover State ────────────────────────────────────────────── */
+.cursor-outline.hovering {
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(214, 177, 109, 0.08);
+  border-color: rgba(214, 177, 109, 0.6);
+  box-shadow: 0 0 20px rgba(214, 177, 109, 0.15);
+}
+
+/* ── Premium Card Hover Glow ─────────────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.6),
+              0 0 30px rgba(214, 177, 109, 0.06);
+  border-color: rgba(214, 177, 109, 0.2) !important;
+}
+
+/* ── Image Zoom on Card Hover ────────────────────────────────────────────── */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img,
+.img-zoom > div {
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-zoom:hover img,
+.img-zoom:hover > div {
+  transform: scale(1.06);
+}
+
+/* ── Tag / Badge Pill ─────────────────────────────────────────────────────── */
+.tag-pill {
+  @apply px-3 py-1 text-xs font-medium rounded-full border border-white/10 bg-white/5 text-text-secondary;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.tag-pill:hover {
+  border-color: rgba(214, 177, 109, 0.4);
+  color: #D6B16D;
+}
+

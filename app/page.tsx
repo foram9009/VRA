@@ -20,21 +20,43 @@ export default async function Home() {
         <h2 className="heading-lg mb-12 reveal">Selected Work</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.portfolios.map((project: (typeof data.portfolios)[number]) => (
-            <Link key={project.id} href={`/portfolio/${project.slug}`} className="group relative block overflow-hidden rounded-lg reveal cursor-hover">
-              <Image 
-                src={project.coverImage} 
-                alt={project.title}
-                width={600}
-                height={400}
-                className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-primary text-lg font-medium tracking-wide">{project.title}</span>
+            <Link
+              key={project.id}
+              href={`/portfolio/${project.slug}`}
+              className="group block overflow-hidden rounded-xl border border-white/5 card-hover cursor-hover reveal"
+            >
+              {/* Image */}
+              <div className="relative h-72 img-zoom">
+                <Image
+                  src={project.coverImage}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+                  <span className="text-primary text-xs uppercase tracking-widest font-semibold translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    View Project →
+                  </span>
+                </div>
+              </div>
+              {/* Card Footer */}
+              <div className="bg-card px-5 py-4 border-t border-white/5 flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold group-hover:text-primary transition-colors duration-300">{project.title}</h3>
+                  {'category' in project && project.category && (
+                    <p className="text-text-secondary text-xs mt-0.5">{(project.category as { name: string }).name}</p>
+                  )}
+                </div>
+                {'year' in project && project.year && (
+                  <span className="text-text-secondary text-xs tabular-nums">{String(project.year)}</span>
+                )}
               </div>
             </Link>
           ))}
         </div>
       </Section>
+
 
       {/* About Preview */}
       <Section id="about" className="bg-surface rounded-3xl">
