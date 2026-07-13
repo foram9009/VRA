@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Syne } from 'next/font/google';
 import '@/styles/globals.css';
 import MainLayout from '@/components/layout/MainLayout';
 import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
@@ -8,6 +8,12 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap', // Prevent FOIT (Flash of Invisible Text)
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
+  display: 'swap',
 });
 
 // ── Viewport (must be exported separately in Next.js 15) ──────────────────
@@ -80,7 +86,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark bg-background text-text-primary font-sans ${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`dark bg-background text-text-primary font-sans ${inter.variable} ${syne.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
         {/* SmoothScrollProvider initializes Lenis + GSAP ticker for the entire site */}
         <SmoothScrollProvider>

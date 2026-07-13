@@ -38,6 +38,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-syne)', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {

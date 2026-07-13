@@ -84,11 +84,11 @@ body {
   }
   
   .heading-xl {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1];
+    @apply font-heading text-5xl sm:text-6xl md:text-8xl lg:text-[8rem] font-bold tracking-tighter leading-[0.9] uppercase;
   }
   
   .heading-lg {
-    @apply text-3xl sm:text-4xl md:text-5xl font-light tracking-tight;
+    @apply font-heading text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1] uppercase;
   }
   
   .text-secondary-custom {
