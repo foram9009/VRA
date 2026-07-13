@@ -25,9 +25,7 @@ export default function LoadingScreen() {
         { scaleX: 1, duration: 1, ease: 'power2.inOut' }, 
         '-=0.4'
       )
-      .to('.loading-overlay', { opacity: 0, duration: 0.6, ease: 'power2.inOut', onComplete: () => {
-        document.querySelector('.loading-overlay')?.remove();
-      }});
+      .to('.loading-overlay', { opacity: 0, duration: 0.6, ease: 'power2.inOut' });
   }, [isLoaded]);
 
   if (isLoaded) return null;
