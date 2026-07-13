@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import MagneticButton from '@/components/ui/MagneticButton';
 import Link from 'next/link';
+import HeroScene from './HeroScene';
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,6 +14,13 @@ export default function Hero() {
 
   useEffect(() => {
     if (!containerRef.current) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!headlineRef.current) return;
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      gsap.to(headlineRef.current, { x: x * 0.5, y: y * 0.5, duration: 1 });
+    };
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
@@ -38,18 +46,18 @@ export default function Hero() {
       }, '-=0.4');
 
       // Mouse parallax hint
-      document.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-        gsap.to(headlineRef.current, { x: x * 0.5, y: y * 0.5, duration: 1 });
-      });
+      document.addEventListener('mousemove', handleMouseMove);
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   return (
     <section ref={containerRef} className="relative h-screen flex flex-col justify-center items-center px-6 overflow-hidden">
+      <HeroScene />
       {/* Background Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none z-10" />
       

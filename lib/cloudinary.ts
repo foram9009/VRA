@@ -2,12 +2,18 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 export async function uploadToCloudinary(buffer: Buffer, filename: string, folder = 'luxe-agency') {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<{ url: string; publicId: string }>((resolve, reject) => {
+    const cleanName = filename.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9-_]/g, '_');
+    const uniqueName = `${cleanName}_${Date.now()}`;
+    
     const stream = cloudinary.uploader.upload_stream(
-      { folder, public_id: filename.replace(/\.[^/.]+$/, '') },
+      { folder, public_id: uniqueName },
       (error, result) => {
         if (error) reject(error);
-        else resolve(result?.secure_url ?? '');
+        else resolve({
+          url: result?.secure_url ?? '',
+          publicId: result?.public_id ?? '',
+        });
       }
     );
     stream.end(buffer);

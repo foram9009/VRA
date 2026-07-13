@@ -12,7 +12,7 @@ interface Column<T> {
 interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  onEdit: (item: T) => void;
+  onEdit?: (item: T) => void;
   onDelete: (id: string) => void;
   className?: string;
 }
@@ -44,13 +44,15 @@ export default function DataTable<T extends { id: string }>({
                 ))}
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button 
-                      onClick={() => onEdit(item)}
-                      className="p-2 text-text-secondary hover:text-primary transition-colors"
-                      title="Edit"
-                    >
-                      <Edit size={16} />
-                    </button>
+                    {onEdit && (
+                      <button 
+                        onClick={() => onEdit(item)}
+                        className="p-2 text-text-secondary hover:text-primary transition-colors"
+                        title="Edit"
+                      >
+                        <Edit size={16} />
+                      </button>
+                    )}
                     <button 
                       onClick={() => onDelete(item.id)}
                       className="p-2 text-red-400/70 hover:text-red-400 transition-colors"

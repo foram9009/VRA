@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Layers,
+  FolderOpen,
   FileText,
   Briefcase,
   Users,
@@ -23,6 +24,7 @@ import { signOut } from 'next-auth/react';
 const navItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Portfolio', href: '/dashboard/portfolio', icon: Layers },
+  { name: 'Categories', href: '/dashboard/categories', icon: FolderOpen },
   { name: 'Blog Posts', href: '/dashboard/blog', icon: FileText },
   { name: 'Careers', href: '/dashboard/careers', icon: Briefcase },
   { name: 'Users', href: '/dashboard/users', icon: Users },
