@@ -80,8 +80,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark bg-background text-text-primary font-sans ${inter.variable}`}>
-      <body>
+    <html lang="en" className={`dark bg-background text-text-primary font-sans ${inter.variable}`} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         {/* SmoothScrollProvider initializes Lenis + GSAP ticker for the entire site */}
         <SmoothScrollProvider>
           <MainLayout>{children}</MainLayout>
