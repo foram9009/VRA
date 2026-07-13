@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: 'A curated selection of our most impactful digital experiences — branding, web design, and motion work.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function PortfolioPage() {
   const [projects, categories] = await getPortfolioData();
 

@@ -2,6 +2,8 @@ import Section from '@/components/ui/Section';
 import { getCareerData } from '@/lib/data';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Careers() {
   const jobs = await getCareerData();
 

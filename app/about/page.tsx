@@ -2,6 +2,8 @@ import Section from '@/components/ui/Section';
 import { getAboutData } from '@/lib/data';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 export default async function About() {
   const data = await getAboutData();
 

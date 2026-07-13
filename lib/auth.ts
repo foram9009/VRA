@@ -5,10 +5,9 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { Role } from '@prisma/client';
+import { authConfig } from '@/auth.config';
 
 // ── Module Augmentation ────────────────────────────────────────────────────
-// Extends NextAuth built-in types so that session.user.role and session.user.id
-// are properly typed throughout the application.
 declare module 'next-auth' {
   interface Session {
     user: {
@@ -24,12 +23,11 @@ declare module 'next-auth' {
     role: Role;
   }
 }
-// Note: next-auth/jwt module augmentation is not available in next-auth v5 beta.
-// JWT token fields are typed via assertions in the callbacks below.
 // ──────────────────────────────────────────────────────────────────────────
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  ...authConfig,
   providers: [
     CredentialsProvider({
       credentials: {
@@ -61,25 +59,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  pages: {
-    signIn: '/admin/login',
-  },
-  session: { strategy: 'jwt' },
-  callbacks: {
-    async jwt({ token, user }) {
-      // `user` is only present on initial sign-in
-      if (user) {
-        token.id = user.id as string;
-        token.role = user.role as string; // Store as string in JWT payload
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as Role; // Cast back to Role enum for app usage
-      }
-      return session;
-    },
-  },
 });

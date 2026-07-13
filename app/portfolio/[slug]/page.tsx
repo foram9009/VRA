@@ -5,13 +5,67 @@ import { prisma } from '@/lib/prisma';
 import Section from '@/components/ui/Section';
 import { formatDate } from '@/lib/utils';
 
+// ── Mock Fallback Data ──────────────────────────────────────────────────────
+const mockPortfolios = [
+  {
+    id: 'mock-1',
+    title: 'Branding & Identity',
+    slug: 'branding-identity',
+    coverImage: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-4.jpg',
+    category: { name: 'Branding', slug: 'branding' },
+    year: 2026,
+    client: 'Apex Corp',
+    excerpt: 'A premium corporate brand identity redesign.',
+    description: 'Designed from the ground up to establish a luxury position in the modern cloud hosting market.',
+    tags: ['Brand Guidelines', 'Logo Design', 'Corporate Identity'],
+    images: [],
+  },
+  {
+    id: 'mock-2',
+    title: 'Luxury E-Commerce',
+    slug: 'luxury-ecommerce',
+    coverImage: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-3.jpg',
+    category: { name: 'Web Design', slug: 'web-design' },
+    year: 2026,
+    client: 'Aura Cosmetics',
+    excerpt: 'An immersive editorial shopping experience.',
+    description: 'High-end cosmetics store utilizing custom typography, micro-interactions, and visual layouts.',
+    tags: ['Next.js 15', 'Framer Motion', 'E-Commerce UX'],
+    images: [],
+  },
+  {
+    id: 'mock-3',
+    title: 'Interactive 3D Motion',
+    slug: 'interactive-3d-motion',
+    coverImage: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-5.jpg',
+    category: { name: 'Motion', slug: 'motion' },
+    year: 2026,
+    client: 'Vapor Wave',
+    excerpt: 'Ultra-smooth webgl and physics visual interactions.',
+    description: 'Interactive portfolio highlighting 3D rendering capabilities using React Three Fiber.',
+    tags: ['React Three Fiber', 'Shaders', 'WebGL Physics'],
+    images: [],
+  },
+];
+// ──────────────────────────────────────────────────────────────────────────
+
 async function getProject(slug: string) {
-  const project = await prisma.portfolio.findUnique({
-    where: { slug },
-    include: { category: true, author: true },
-  });
-  if (!project || project.status !== 'PUBLISHED') notFound();
-  return project;
+  try {
+    const project = await prisma.portfolio.findUnique({
+      where: { slug },
+      include: { category: true, author: true },
+    });
+    if (!project || project.status !== 'PUBLISHED') {
+      const mock = mockPortfolios.find(p => p.slug === slug);
+      if (!mock) notFound();
+      return mock;
+    }
+    return project;
+  } catch (error) {
+    console.warn(`[DB WARNING] Failed to fetch project "${slug}". Using fallback mock project.`);
+    const mock = mockPortfolios.find(p => p.slug === slug) || mockPortfolios[0];
+    return mock;
+  }
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -62,8 +116,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <span className="text-text-secondary text-sm uppercase tracking-wider block mb-2">{item.label}</span>
               <span className="text-white text-lg font-light">{item.value}</span>
             </div>
-
-))}
+          ))}
         </div>
 
         {/* Description Content */}
@@ -75,7 +128,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </p>
           </div>
           <div className="md:col-span-7 reveal delay-100">
-             {/* Simulated "Tech Stack" or features list */}
              <h3 className="text-2xl font-light text-primary mb-6">Highlights</h3>
              <ul className="space-y-4">
                {project.tags.map(tag => (
@@ -92,15 +144,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-4">
           {images.length > 0 ? images.map((img, i) => (
              <div key={i} className="relative aspect-[4/3] rounded-lg overflow-hidden reveal group">
-                <Image src={img.url} alt={img.caption || 'Project detail'} fill className="object-cover" />
-                {img.caption && (
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-xs text-white">{img.caption}</p>
-                  </div>
-                )}
+                 <Image src={img.url} alt={img.caption || 'Project detail'} fill className="object-cover" />
+                 {img.caption && (
+                   <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                     <p className="text-xs text-white">{img.caption}</p>
+                   </div>
+                 )}
              </div>
           )) : (
-            /* Fallback if no extra images */
             <div className="col-span-full p-12 border border-dashed border-white/20 rounded-lg text-center">
               <p className="text-text-secondary">Additional assets available on request.</p>
             </div>

@@ -1,6 +1,8 @@
 import Section from '@/components/ui/Section';
 import { getServiceData } from '@/lib/data';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Services() {
   const services = await getServiceData();
 

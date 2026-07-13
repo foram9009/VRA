@@ -5,29 +5,65 @@ import { prisma } from '@/lib/prisma';
 import Section from '@/components/ui/Section';
 import { formatDate } from '@/lib/utils';
 
+// ── Mock Fallback Data ──────────────────────────────────────────────────────
+const mockBlogs = [
+  {
+    id: 'mock-1',
+    title: 'The Future of Minimal Design',
+    slug: 'future-minimal-design',
+    coverImage: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-2.jpg',
+    excerpt: 'How whitespace and clean typography define luxury digital branding.',
+    content: 'Whitespace is not empty space; it is design element that guides the user\'s eyes.\n\nMinimalism is not about removing everything; it is about keeping only what is necessary to convey meaning and create clean UX/UI.',
+    category: { name: 'Design Insights', slug: 'insights' },
+    author: { name: 'Foram Patel', image: '' },
+    createdAt: new Date(),
+    readTime: 5,
+    tags: ['Design', 'Minimalism', 'Typography'],
+    categoryId: 'insights',
+  },
+];
+// ──────────────────────────────────────────────────────────────────────────
+
 async function getPost(slug: string) {
-  const post = await prisma.blog.findUnique({
-    where: { slug },
-    include: { author: true, category: true },
-  });
-  if (!post || post.status !== 'PUBLISHED') notFound();
-  return post;
+  try {
+    const post = await prisma.blog.findUnique({
+      where: { slug },
+      include: { author: true, category: true },
+    });
+    if (!post || post.status !== 'PUBLISHED') {
+      const mock = mockBlogs.find(p => p.slug === slug);
+      if (!mock) notFound();
+      return mock;
+    }
+    return post;
+  } catch (error) {
+    console.warn(`[DB WARNING] Failed to fetch blog post "${slug}". Using fallback mock post.`);
+    const mock = mockBlogs.find(p => p.slug === slug) || mockBlogs[0];
+    return mock;
+  }
+}
+
+async function getRelatedPosts(categoryId: string, postId: string) {
+  try {
+    return await prisma.blog.findMany({
+      where: { 
+        categoryId: categoryId, 
+        NOT: { id: postId },
+        status: 'PUBLISHED' 
+      },
+      take: 3,
+      select: { id: true, title: true, slug: true, coverImage: true }
+    });
+  } catch (error) {
+    console.warn('[DB WARNING] Failed to fetch related blog posts. Returning empty array.');
+    return [];
+  }
 }
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const post = await getPost(resolvedParams.slug);
-
-  // Mock "Related Posts" logic - fetch others from same category
-  const relatedPosts = await prisma.blog.findMany({
-    where: { 
-      categoryId: post.categoryId, 
-      NOT: { id: post.id },
-      status: 'PUBLISHED' 
-    },
-    take: 3,
-    select: { id: true, title: true, slug: true, coverImage: true }
-  });
+  const relatedPosts = await getRelatedPosts(post.categoryId, post.id);
 
   return (
     <article className="pb-20">
@@ -41,9 +77,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         <div className="flex items-center justify-center gap-6 text-text-secondary text-sm">
           <div className="flex items-center gap-2">
              {post.author.image ? (
-               <Image src={post.author.image} alt={post.author.name || 'Author'} width={32} height={32} className="rounded-full" />
+                <Image src={post.author.image} alt={post.author.name || 'Author'} width={32} height={32} className="rounded-full" />
              ) : (
-               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs text-primary">JD</div>
+                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs text-primary">FP</div>
              )}
              <span>{post.author.name || 'Anonymous'}</span>
           </div>
@@ -64,11 +100,6 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
       {/* Content Body */}
       <Section className="bg-surface/30 rounded-3xl">
         <div className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-p:text-text-secondary prose-a:text-primary">
-          {/* 
-            In a real app, use react-markdown or MDX. 
-            For Prisma text field, simple whitespace handling is used here. 
-            Ideally content would be split by newlines for paragraphs. 
-          */}
           {post.content.split('\n\n').map((paragraph, i) => (
             <p key={i} className="mb-6 leading-relaxed">{paragraph}</p>
           ))}
