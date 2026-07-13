@@ -14,8 +14,9 @@ async function getProject(slug: string) {
   return project;
 }
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = await getProject(params.slug);
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const project = await getProject(resolvedParams.slug);
   
   // Parse JSON images safely
   const images = Array.isArray(project.images) 

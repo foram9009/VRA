@@ -3,12 +3,7 @@ import Section from '@/components/ui/Section';
 import { getHomeData } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 
-  const HeroScene = dynamic(() => import('@/components/sections/HeroScene'), { 
-  ssr: false, // Disable SSR for this component
-  loading: () => <div className="h-screen bg-background" /> // Fallback
-});
 
 export default async function Home() {
   const data = await getHomeData();

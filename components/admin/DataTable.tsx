@@ -23,7 +23,7 @@ export default function DataTable<T extends { id: string }>({
 }: DataTableProps<T>) {
   return (
     <div className="overflow-x-auto rounded-lg border border-white/5">
-      <table className={cn('w-full text-left text-sm", className)}>
+      <table className={cn("w-full text-left text-sm", className)}>
         <thead className="bg-surface text-text-secondary uppercase tracking-wider text-xs">
           <tr>
             {columns.map(col => (

@@ -4,9 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
 
-export default async function Blog({ searchParams }: { searchParams: { category?: string; page?: string } }) {
-  const category = searchParams.category;
-  const page = Number(searchParams.page) || 1;
+export default async function Blog({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }) {
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams.category;
+  const page = Number(resolvedSearchParams.page) || 1;
   
   const [posts, total, categories] = await getBlogData(category, page);
 

@@ -1,6 +1,6 @@
 // app/api/newsletter/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { newsletterSchema } from '@/schemas/newsletter';
+import { newsletterSchema } from '@/schemas/contact';
 import { NewsletterService } from '@/services/prisma';
 import { sendNewsletterConfirmation } from '@/lib/resend';
 

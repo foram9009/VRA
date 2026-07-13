@@ -11,7 +11,7 @@ export const contactSchema = z.object({
 export type ContactInput = z.infer<typeof contactSchema>;
 
 // schemas/newsletter.ts
-import { z } from 'zod';
+
 
 export const newsletterSchema = z.object({
   email: z.string().email('Valid email is required'),

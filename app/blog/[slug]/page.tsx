@@ -14,8 +14,9 @@ async function getPost(slug: string) {
   return post;
 }
 
-export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug);
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const post = await getPost(resolvedParams.slug);
 
   // Mock "Related Posts" logic - fetch others from same category
   const relatedPosts = await prisma.blog.findMany({

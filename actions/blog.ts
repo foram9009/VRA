@@ -19,7 +19,7 @@ const blogSchema = z.object({
 
 export async function createBlog(formData: FormData) {
   const session = await auth();
-  if (!session?.user || ![Role.ADMIN, Role.EDITOR].includes(session.user.role as Role)) return { error: 'Unauthorized' };
+  if (!session?.user || !([Role.ADMIN, Role.EDITOR] as Role[]).includes(session.user.role as Role)) return { error: 'Unauthorized' };
   
   const data = Object.fromEntries(formData);
   const parsed = blogSchema.safeParse({ ...data, tags: JSON.parse(data.tags as string) });
