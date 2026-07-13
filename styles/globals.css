@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #070707;
+  --surface: #111111;
+  --card: #191919;
+  --text-primary: #ffffff;
+  --text-secondary: #c9c9c9;
+  --accent: #d6b16d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  cursor: none !important;
+  overflow-x: hidden;
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  body, a, button, input, textarea, select {
+    cursor: auto !important;
+  }
+  .custom-cursor, .cursor-dot, .cursor-outline {
+    display: none !important;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  ::selection {
+    background-color: var(--accent);
+    color: #070707;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-6 md:px-12 xl:px-24;
+  }
+  
+  .heading-xl {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1];
+  }
+  
+  .heading-lg {
+    @apply text-3xl sm:text-4xl md:text-5xl font-light tracking-tight;
+  }
+  
+  .text-secondary-custom {
+    @apply text-text-secondary;
+  }
+}

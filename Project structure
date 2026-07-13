@@ -1,0 +1,9 @@
+app/             # Next.js App Router pages & API routes
+components/      # Reusable UI, layout, sections, admin components
+lib/             # Utils, auth, prisma client, resend, cloudinary
+services/        # Business logic layer
+schemas/         # Zod validation schemas
+actions/         # Server actions for mutations
+providers/       # Lenis scroll, Three.js context, theme providers
+prisma/          # Schema & migrations
+__tests__/       # Jest + RTL test suite

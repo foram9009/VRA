@@ -1,0 +1,6 @@
+npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir=false
+npm install -D prisma @prisma/client tsx typescript
+npx prisma init
+# Copy all files above into respective locations
+npm install
+npx prisma db push

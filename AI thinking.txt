@@ -1,0 +1,96 @@
+Here's a thinking process:
+
+Analyze User Input:
+Role/Goal: Elite full-stack architect/engineer/designer. Build a COMPLETE production-ready Creative Digital Agency platform.
+Inspiration: nudot.com.tw (award-winning, interactive, luxury/minimal/dark mode)
+Constraint: DO NOT clone/copy. Must be original but same quality level. Production-ready. Clean, scalable, maintainable.
+Tech Stack: Next.js 15 App Router, React 19, TS, Tailwind, GSAP, ScrollTrigger, Lenis, Framer Motion, Three.js, R3F, R3Drei, Shadcn UI, Lucide, NextAuth, Prisma, PostgreSQL, Zod, bcrypt, Cloudinary, Resend, React Hook Form.
+Structure: Specific folder structure provided.
+Design: Luxury, minimal, modern, elegant, creative, interactive, editorial, premium, dark mode. Specific hex colors: BG #070707, Surface #111111, Cards #191919, Primary Text #FFFFFF, Secondary Text #C9C9C9, Accent #D6B16D. Large hero text, clean sans-serif, generous spacing, beautiful hierarchy, responsive typography.
+Pages: Home, About, Services, Portfolio, Portfolio Details, Blog, Blog Details, Careers, Career Details, Contact, Privacy Policy, Terms, 404, Admin Login, Admin Dashboard.
+Home Sections: Loading animation, Fullscreen Hero, Animated Headline/CTA, Mouse interaction, Background particles, 3D scene, Featured projects, About preview, Services, Process, Statistics, Testimonials, Blog preview, Clients, FAQ, Newsletter, Contact CTA, Footer.
+Animations: GSAP everywhere (loading, transitions, fade, scale, rotate, blur, mask, image/text reveal, scrolltrigger, sticky/pin, horizontal scroll, parallax, mouse parallax, magnetic buttons, cursor follower, infinite marquee, SVG, counters, video reveal, section transitions). Target 60fps.
+3D: R3F (particles, floating geometry, animated lights, environment, camera movement, interactive mouse, bloom, post-processing, noise, shaders).
+Backend/DB: Next.js Route Handlers, Prisma, PostgreSQL, NextAuth, Zod, bcrypt, roles (Admin/Editor/User), CRUD for all entities.
+Admin Panel: Beautiful dashboard, sidebar, analytics, charts, CRUD for everything, media management, settings.
+Forms/Emails/Media/SEO/Security/Performance/Testing/Config: All specified features must be implemented.
+Content Management: Nothing hardcoded; all editable via admin.
+Final Goal: Generate ENTIRE project. If too long, split into phases (1-8). Each phase complete.
+Identify Constraints & Challenges:
+Generating a complete production-ready agency website with all these features in one response is impossible due to context limits and token restrictions.
+The user explicitly allows phasing: "If the response exceeds the context window, generate the project in phases... Each phase must be complete before moving to the next."
+I need to start with Phase 1: Project setup and configuration as instructed, but I should also provide a highly detailed architectural blueprint, core configurations, and foundational code that sets up the entire stack properly. I'll structure it carefully to maximize value within limits.
+I must adhere strictly to the tech stack, design system, and folder structure.
+I need to ensure everything is production-ready: proper TypeScript types, error handling, security basics, performance optimizations, and clean architecture.
+Phase 1 Planning (Setup & Configuration):
+package.json dependencies
+tsconfig.json, next.config.ts, tailwind.config.ts, postcss.config.js
+.env.example
+prisma/schema.prisma (all models as specified)
+Initial folder structure setup commands
+Core utility files: lib/utils.ts, lib/prisma.ts, lib/auth.ts (NextAuth setup)
+Base layout & global styles
+Lenis + GSAP + R3F foundational providers
+This phase will establish the skeleton, configuration, database schema, and core architectural patterns.
+Drafting - Mental Refinement (Phase 1): Package.json: Include all specified deps + dev deps. Note: Next.js 15, React 19 are latest. I'll specify exact compatible versions or ranges that work together. Prisma Schema: Need models for User, Role, Portfolio, Category, Blog, Tag, Service, Testimonial, Client, Career, Application, Contact, Newsletter, SiteSetting, Media, FAQ, Analytics. Relationships must be properly defined. Use PostgreSQL. NextConfig: Image domains (Cloudinary), experimental/nextjs features for 15, MDX if needed (but not requested), routing setup. Tailwind: Custom colors, typography settings, dark mode class strategy. Lenis/GSAP Setup: Provide a wrapper component or middleware for smooth scroll and animation initialization. R3F Setup: Canvas provider with post-processing. Auth: NextAuth 5 (App Router compatible) with credentials + role management. Structure: Match exactly what's requested.
+I'll generate Phase 1 completely. I'll make sure it's production-grade, with proper error handling, TypeScript strict mode, and architectural patterns ready for subsequent phases.
+
+Let's structure the response clearly:
+
+Acknowledge scope & phase approach
+Provide all config files
+Provide Prisma schema
+Provide core utility/lib files
+Provide base layout & providers
+Instructions to run Phase 1
+Note that Phase 2 will follow upon request or automatically if allowed, but I'll stick to the prompt's phasing instruction.
+Self-Correction/Verification during thought:
+
+NextAuth v5 is @auth/core and next-auth. I'll use the App Router adapter pattern.
+Prisma schema needs to be comprehensive but not bloated. I'll define all requested models with appropriate fields, relations, and constraints.
+Tailwind config needs the exact hex codes provided.
+I must ensure no "TODO" or placeholders. Every file provided will be complete for its scope.
+I'll generate Phase 1 now. It will be dense but complete.
+Let's draft carefully. Structure of response:
+
+Phase 1: Project Setup & Configuration
+package.json
+next.config.ts
+tailwind.config.ts
+tsconfig.json
+.env.example
+prisma/schema.prisma
+lib/prisma.ts
+lib/auth.ts (NextAuth v5)
+providers/SmoothScrollProvider.tsx (Lenis + GSAP)
+providers/ThreeProvider.tsx (R3F base)
+app/layout.tsx (Root layout with providers, fonts, metadata)
+components/ui/button.tsx (Shadcn base)
+middleware.ts (Auth/role routing)
+Commands to initialize
+Ready for Phase 2.
+I'll write out the code carefully, ensuring production standards, strict typing, and adherence to all constraints. I'll make sure the Prisma schema covers every model requested. I'll set up NextAuth v5 properly with role-based access in mind. I'll configure Tailwind with the exact palette. I'll set up Lenis + GSAP foundation. All code will be complete and ready to run.
+
+Proceed. Self-Correction/Note during drafting mental code:
+
+Next.js 15 App Router uses next/font automatically. I'll import a clean sans-serif (Inter or Satoshi-like).
+GSAP + Lenis needs careful integration in Next.js to avoid SSR issues. I'll use dynamic imports with ssr: false or a provider that checks typeof window !== 'undefined'.
+Prisma schema: I'll define all models concisely but completely. Add enums for roles, statuses.
+Auth: NextAuth v5 uses auth.ts and route.ts. I'll provide the structure.
+I'll ensure every file is complete and production-ready for Phase 1.
+Let's generate. Output matches the response.✅ Structure check:
+
+package.json
+next.config.ts
+tailwind.config.ts
+tsconfig.json
+postcss.config.js
+.env.example
+prisma/schema.prisma
+lib/prisma.ts
+lib/auth.ts + app/api/auth/[...nextauth]/route.ts & auth.ts
+providers/SmoothScrollProvider.tsx
+providers/ThreeProvider.tsx
+app/layout.tsx
+middleware.ts
+Instructions & Phase 2 preview All aligned. Generating. Output Generation (matches the final response) I will carefully craft each file with production-grade code, comments for clarity, and strict adherence to the prompt. No placeholders. Complete phase 1. Ready. [Proceeds]

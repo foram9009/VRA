@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
+}
+
+enum Status {
+  PUBLISHED
+  DRAFT
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWING
+  SHORTLISTED
+  HIRED
+  REJECTED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  password      String?
+  image         String?
+  role          Role     @default(USER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  portfolios    Portfolio[]
+  blogs         Blog[]
+  applications  Application[]
+  contacts      Contact[]
+  sessions      Session[]
+  accounts      Account[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  sessionToken String @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id            String   @id @default(cuid())
+  userId        String
+  type          String
+  provider      String
+  providerAccountId String
+  refresh_token String?  @db.Text
+  access_token  String?  @db.Text
+  expires_at    Int?
+  token_type    String?
+  scope         String?
+  id_token      String?  @db.Text
+  session_state String?
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Portfolio {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  description   String   @db.Text
+  excerpt       String?
+  coverImage    String
+  images        Json     // [{url, caption}]
+  videoUrl      String?
+  client        String?
+  year          Int?
+  tags          String[]
+  status        Status   @default(DRAFT)
+  authorId      String
+  categoryId    String
+  category      PortfolioCategory @relation(fields: [categoryId], references: [id])
+  author        User     @relation(fields: [authorId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PortfolioCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  portfolios  Portfolio[]
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  excerpt     String?
+  coverImage  String
+  status      Status   @default(DRAFT)
+  authorId    String
+  categoryId  String
+  tags        String[]
+  readTime    Int      // minutes
+  author      User     @relation(fields: [authorId], references: [id])
+  category    BlogCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogCategory {
+  id       String @id @default(cuid())
+  name     String @unique
+  slug     String @unique
+  blogs    Blog[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String   @db.Text
+  features    Json     // [{name, desc}]
+  image       String?
+  priceRange  String?
+  status      Status   @default(DRAFT)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  role        String?
+  company     String?
+  content     String   @db.Text
+  avatar      String?
+  rating      Int      @default(5)
+  status      Status   @default(DRAFT)
+  createdAt   DateTime @default(now())
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String
+  website   String?
+  status    Status   @default(PUBLISHED)
+  createdAt DateTime @default(now())
+}
+
+model Career {
+  id            String             @id @default(cuid())
+  title         String
+  location      String
+  type          String             // Full-time, Contract, Remote
+  description   String             @db.Text
+  requirements  Json               // [{text}]
+  status        Status             @default(DRAFT)
+  applications  Application[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model Application {
+  id              String            @id @default(cuid())
+  careerId        String
+  userId          String?
+  name            String
+  email           String
+  resumeUrl       String
+  coverLetter     String?           @db.Text
+  status          ApplicationStatus @default(APPLIED)
+  career          Career            @relation(fields: [careerId], references: [id])
+  user            User?             @relation(fields: [userId], references: [id])
+  createdAt       DateTime          @default(now())
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique // heroTitle, heroSubtitle, aboutText, etc.
+  value       Json
+  updatedAt   DateTime @updatedAt
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  url         String
+  cloudinaryId String
+  type        String   // image, video
+  folder      String?
+  size        Int?
+  createdAt   DateTime @default(now())
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  order     Int      @default(0)
+  status    Status   @default(PUBLISHED)
+  createdAt DateTime @default(now())
+}
+
+model Analytics {
+  id          String   @id @default(cuid())
+  pagePath    String
+  views       Int      @default(0)
+  date        DateTime @default(now())
+  uniqueId    String   @unique // daily per path
+}
