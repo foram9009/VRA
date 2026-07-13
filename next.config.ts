@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
   images: {
     // FIX: `domains` was deprecated in Next.js 13. Use `remotePatterns` for
     // granular control over allowed image sources (hostname, pathname, protocol).

@@ -3,7 +3,9 @@
 import { motion } from 'framer-motion';
 import MagneticButton from '@/components/ui/MagneticButton';
 import Link from 'next/link';
-import HeroScene from './HeroScene';
+import dynamic from 'next/dynamic';
+
+const HeroScene = dynamic(() => import('./HeroScene'), { ssr: false });
 
 const textReveal = {
   hidden: { y: "120%", opacity: 0 },
