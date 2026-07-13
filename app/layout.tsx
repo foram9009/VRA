@@ -3,6 +3,7 @@ import { Inter, Syne } from 'next/font/google';
 import '@/styles/globals.css';
 import MainLayout from '@/components/layout/MainLayout';
 import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
+import RevealHelper from '@/components/animations/RevealHelper';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning>
         {/* SmoothScrollProvider initializes Lenis + GSAP ticker for the entire site */}
         <SmoothScrollProvider>
+          <RevealHelper />
           <MainLayout>{children}</MainLayout>
         </SmoothScrollProvider>
       </body>

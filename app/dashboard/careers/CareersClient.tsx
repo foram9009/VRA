@@ -1,12 +1,13 @@
 // app/dashboard/careers/CareersClient.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createCareer, updateCareer, deleteCareer } from '@/actions/careers';
 import DataTable from '@/components/admin/DataTable';
-import { Plus, X, Pencil } from 'lucide-react';
+import { Plus, X, Loader2 } from 'lucide-react';
 import { Status } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 interface CareerItem {
   id: string;
@@ -20,9 +21,14 @@ interface CareerItem {
 }
 
 export default function CareersClient({ initialCareers }: { initialCareers: CareerItem[] }) {
+  const router = useRouter();
   const [careersList, setCareersList] = useState<CareerItem[]>(initialCareers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCareer, setEditingCareer] = useState<CareerItem | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Sync if server re-renders with fresh data after router.refresh()
+  useEffect(() => { setCareersList(initialCareers); }, [initialCareers]);
 
   // Form states
   const [title, setTitle] = useState('');
@@ -56,6 +62,7 @@ export default function CareersClient({ initialCareers }: { initialCareers: Care
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const form = new FormData();
     form.append('title', title);
@@ -69,9 +76,12 @@ export default function CareersClient({ initialCareers }: { initialCareers: Care
       ? await updateCareer(editingCareer.id, form)
       : await createCareer(form);
 
+    setIsSubmitting(false);
+
     if (res.success) {
       setIsModalOpen(false);
-      window.location.reload();
+      setEditingCareer(null);
+      router.refresh(); // triggers server re-fetch without full page blink
     } else {
       alert(res.error || 'Failed to save career opening.');
     }
@@ -234,8 +244,10 @@ export default function CareersClient({ initialCareers }: { initialCareers: Care
                 <div className="flex gap-4 pt-6 border-t border-white/5">
                   <button
                     type="submit"
-                    className="flex-1 bg-primary text-background py-3 rounded-sm font-medium hover:bg-white transition-colors"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-primary text-background py-3 rounded-sm font-medium hover:bg-white transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                   >
+                    {isSubmitting && <Loader2 size={16} className="animate-spin" />}
                     {editingCareer ? 'Update Posting' : 'Publish Opening'}
                   </button>
                   <button
