@@ -93,11 +93,8 @@ body {
   }
 }
 
-/* ── Scroll Reveal (initial state — GSAP animates to visible) ─────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(36px);
-}
+/* ── Scroll Reveal (initial state set by GSAP in JS, NOT CSS — safe fallback) ── */
+/* .reveal elements are fully visible by default; RevealHelper animates them in */
 
 /* ── Custom Cursor Hover State ────────────────────────────────────────────── */
 .cursor-outline.hovering {

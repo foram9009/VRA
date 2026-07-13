@@ -5,89 +5,100 @@ import MagneticButton from '@/components/ui/MagneticButton';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-const HeroScene = dynamic(() => import('./HeroScene'), { ssr: false });
-
-const textReveal = {
-  hidden: { y: "120%", opacity: 0 },
-  visible: { 
-    y: 0, 
-    opacity: 1, 
-    transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } 
-  }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2
-    }
-  }
-};
+const HeroScene = dynamic(() => import('./HeroScene'), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function Hero() {
   return (
-    <section className="relative h-screen flex flex-col justify-center items-center px-6 overflow-hidden">
+    <section className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden">
+      {/* 3D Background Canvas */}
       <HeroScene />
-      
-      {/* Background Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none z-10" />
-      
-      <div className="relative z-20 text-center max-w-5xl mx-auto mt-20">
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col items-center"
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background pointer-events-none z-10" />
+
+      {/* Grid Background Pattern */}
+      <div className="absolute inset-0 z-[5] grid-bg pointer-events-none" />
+
+      {/* Hero Content */}
+      <div className="relative z-20 text-center max-w-6xl mx-auto px-6 w-full">
+        {/* Tag line */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs uppercase tracking-widest font-semibold"
         >
-          <div className="overflow-hidden pb-4">
-            <motion.h1 variants={textReveal} className="heading-xl">
-              We Craft Digital
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden pb-6">
-            <motion.h1 variants={textReveal} className="heading-xl">
-              <span className="text-primary italic">Experiences</span> That Last
-            </motion.h1>
-          </div>
-          
-          <motion.p 
-            variants={textReveal} 
-            className="text-lg md:text-xl text-text-secondary max-w-xl mx-auto leading-relaxed mb-10 mt-4 font-light tracking-wide"
-          >
-            Strategy. Design. Technology. We build brands that stand out in the noise and leave a lasting impact.
-          </motion.p>
-          
-          <motion.div 
-            variants={textReveal} 
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-          >
-            <MagneticButton asChild strength={0.2}>
-              <Link href="/portfolio" className="bg-primary text-background px-8 py-4 rounded-full font-bold hover:bg-white transition-colors uppercase tracking-widest text-xs">
-                View Our Work
-              </Link>
-            </MagneticButton>
-            <MagneticButton asChild strength={0.2}>
-              <Link href="/contact" className="border border-white/20 text-primary px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors uppercase tracking-widest text-xs">
-                Start a Project
-              </Link>
-            </MagneticButton>
-          </motion.div>
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          Award-Winning Digital Studio
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="heading-xl mb-6"
+        >
+          We Craft Digital
+          <br />
+          <span className="text-primary italic">Experiences</span> That Last
+        </motion.h1>
+
+        {/* Subtext */}
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed mb-12 font-light tracking-wide"
+        >
+          Strategy. Design. Technology. We build brands that stand out in the noise and leave a lasting impact on the world.
+        </motion.p>
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <MagneticButton asChild strength={0.2}>
+            <Link
+              href="/portfolio"
+              className="bg-primary text-background px-10 py-4 rounded-full font-bold hover:bg-white transition-colors uppercase tracking-widest text-xs cursor-hover"
+            >
+              View Our Work
+            </Link>
+          </MagneticButton>
+          <MagneticButton asChild strength={0.2}>
+            <Link
+              href="/contact"
+              className="border border-white/20 text-white px-10 py-4 rounded-full font-bold hover:bg-white/10 hover:border-white/40 transition-colors uppercase tracking-widest text-xs cursor-hover"
+            >
+              Start a Project
+            </Link>
+          </MagneticButton>
         </motion.div>
       </div>
 
       {/* Scroll Indicator */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce"
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.5, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 10L12 15L17 10" stroke="#D6B16D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <span className="text-text-secondary text-[10px] uppercase tracking-widest">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M7 10L12 15L17 10" stroke="#D6B16D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
       </motion.div>
     </section>
   );
