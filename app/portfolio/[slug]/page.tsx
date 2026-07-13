@@ -130,12 +130,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div className="md:col-span-7 reveal delay-100">
              <h3 className="text-2xl font-light text-primary mb-6">Highlights</h3>
              <ul className="space-y-4">
-               {project.tags.map(tag => (
-                 <li key={tag} className="flex items-center gap-3 text-text-secondary">
-                   <span className="w-1.5 h-1.5 bg-primary rounded-full" />
-                   {tag}
-                 </li>
-               ))}
+               {(() => {
+                 const tags = Array.isArray(project.tags) ? (project.tags as string[]) : [];
+                 return tags.map(tag => (
+                   <li key={tag} className="flex items-center gap-3 text-text-secondary">
+                     <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+                     {tag}
+                   </li>
+                 ));
+               })()}
              </ul>
           </div>
         </div>

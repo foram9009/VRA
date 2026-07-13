@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -60,12 +60,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -77,14 +77,14 @@ model Portfolio {
   id          String            @id @default(cuid())
   title       String
   slug        String            @unique
-  description String            @db.Text
+  description String
   excerpt     String?
   coverImage  String
   images      Json              // [{url, caption}]
   videoUrl    String?
   client      String?
   year        Int?
-  tags        String[]
+  tags        Json
   status      Status            @default(DRAFT)
   authorId    String
   categoryId  String
@@ -110,13 +110,13 @@ model Blog {
   id         String       @id @default(cuid())
   title      String
   slug       String       @unique
-  content    String       @db.Text
+  content    String
   excerpt    String?
   coverImage String
   status     Status       @default(DRAFT)
   authorId   String
   categoryId String
-  tags       String[]
+  tags       Json
   readTime   Int          // minutes
   author     User         @relation(fields: [authorId], references: [id])
   category   BlogCategory @relation(fields: [categoryId], references: [id])
@@ -139,7 +139,7 @@ model Service {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  description String   @db.Text
+  description String
   features    Json     // [{name, desc}]
   image       String?
   priceRange  String?
@@ -155,7 +155,7 @@ model Testimonial {
   name      String
   role      String?
   company   String?
-  content   String   @db.Text
+  content   String
   avatar    String?
   rating    Int      @default(5)
   status    Status   @default(DRAFT)
@@ -180,7 +180,7 @@ model Career {
   title        String
   location     String
   type         String        // Full-time, Contract, Remote
-  description  String        @db.Text
+  description  String
   requirements Json          // [{text}]
   status       Status        @default(DRAFT)
   applications Application[]
@@ -197,7 +197,7 @@ model Application {
   name        String
   email       String
   resumeUrl   String
-  coverLetter String?           @db.Text
+  coverLetter String?
   status      ApplicationStatus @default(APPLIED)
   career      Career            @relation(fields: [careerId], references: [id])
   user        User?             @relation(fields: [userId], references: [id])
@@ -212,7 +212,7 @@ model Contact {
   name      String
   email     String
   subject   String?
-  message   String   @db.Text
+  message   String
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -247,7 +247,7 @@ model Media {
 model FAQ {
   id        String   @id @default(cuid())
   question  String
-  answer    String   @db.Text
+  answer    String
   order     Int      @default(0)
   status    Status   @default(PUBLISHED)
   createdAt DateTime @default(now())

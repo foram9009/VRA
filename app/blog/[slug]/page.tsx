@@ -105,14 +105,16 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           ))}
         </div>
 
-        {/* Tags */}
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap gap-3 reveal">
-           {post.tags.map(tag => (
-             <span key={tag} className="bg-card px-4 py-2 rounded-full text-xs text-text-secondary border border-white/5 hover:border-primary/50 transition-colors cursor-default">
-               #{tag}
-             </span>
-           ))}
-        </div>
+         <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap gap-3 reveal">
+            {(() => {
+              const tags = Array.isArray(post.tags) ? (post.tags as string[]) : [];
+              return tags.map(tag => (
+                <span key={tag} className="bg-card px-4 py-2 rounded-full text-xs text-text-secondary border border-white/5 hover:border-primary/50 transition-colors cursor-default">
+                  #{tag}
+                </span>
+              ));
+            })()}
+         </div>
       </Section>
 
       {/* Related Posts */}
