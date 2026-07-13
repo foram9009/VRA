@@ -1,10 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface SectionProps {
   children: React.ReactNode;
@@ -19,42 +16,25 @@ export default function Section({
   className = '', 
   animateOnScroll = true 
 }: SectionProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!animateOnScroll || !sectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const elements = sectionRef.current?.querySelectorAll('.reveal');
-      elements?.forEach((el, i) => {
-        gsap.fromTo(el, 
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: i * 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, [animateOnScroll]);
+  
+  if (!animateOnScroll) {
+    return (
+      <section id={id} className={cn('container-custom py-24 md:py-32', className)}>
+        {children}
+      </section>
+    );
+  }
 
   return (
-    <section 
-      id={id} 
-      ref={sectionRef} 
-      className={`container-custom py-24 md:py-32 ${className}`}
+    <motion.section
+      id={id}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className={cn('container-custom py-24 md:py-32', className)}
     >
       {children}
-    </section>
+    </motion.section>
   );
 }

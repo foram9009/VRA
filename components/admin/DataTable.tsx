@@ -21,9 +21,9 @@ export default function DataTable<T extends { id: string }>({
   data, columns, onEdit, onDelete, className 
 }: DataTableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-white/5">
+    <div className="overflow-x-auto border border-white/10">
       <table className={cn("w-full text-left text-sm", className)}>
-        <thead className="bg-surface text-text-secondary uppercase tracking-wider text-xs">
+        <thead className="bg-black/50 text-text-secondary uppercase tracking-widest text-[10px]">
           <tr>
             {columns.map(col => (
               <th key={col.key} className="px-6 py-4 font-medium">{col.header}</th>

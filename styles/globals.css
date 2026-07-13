@@ -15,10 +15,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Fix GSAP animation flash */
-.reveal {
-  opacity: 0;
-}
+
 
 /* Glassmorphism panel matching luxury aesthetic */
 .glass-panel {

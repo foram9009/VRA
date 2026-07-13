@@ -38,8 +38,8 @@ export default function SettingsClient({ initialSettings }: SettingsClientProps)
     <div className="space-y-6 max-w-4xl">
       <div className="flex justify-between items-center border-b border-white/5 pb-4">
         <div>
-          <h1 className="text-2xl font-bold">Global Site Settings</h1>
-          <p className="text-sm text-text-secondary">Configure branding, contact details, and social channels</p>
+          <h1 className="text-2xl font-heading font-bold uppercase tracking-tighter">Global Site Settings</h1>
+          <p className="text-[11px] text-text-secondary uppercase tracking-widest mt-1">Configure branding, contact details, and social channels</p>
         </div>
       </div>
 
@@ -58,105 +58,105 @@ export default function SettingsClient({ initialSettings }: SettingsClientProps)
 
       <form onSubmit={handleSubmit} className="space-y-8 bg-card border border-white/5 p-6 rounded-xl">
         {/* Branding Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-primary border-b border-white/5 pb-2">Branding</h2>
+        <div className="space-y-6">
+          <h2 className="text-sm font-heading font-bold uppercase text-primary border-b border-white/5 pb-2">Branding</h2>
           
-          <div className="space-y-1.5">
-            <label className="text-xs text-text-secondary uppercase tracking-wider">Agency Name</label>
+          <div className="space-y-2">
+            <label className="text-[10px] text-text-secondary uppercase tracking-widest">Agency Name</label>
             <input
               value={settings.siteName}
               onChange={(e) => handleChange('siteName', e.target.value)}
               required
               placeholder="e.g. Luxe Digital Agency"
-              className="w-full max-w-lg bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white"
+              className="w-full max-w-lg bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
             />
           </div>
         </div>
 
         {/* Contact Info Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-primary border-b border-white/5 pb-2">Contact Details</h2>
+        <div className="space-y-6 pt-6">
+          <h2 className="text-sm font-heading font-bold uppercase text-primary border-b border-white/5 pb-2">Contact Details</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1.5">
-              <label className="text-xs text-text-secondary uppercase tracking-wider">Contact Email</label>
+            <div className="space-y-2">
+              <label className="text-[10px] text-text-secondary uppercase tracking-widest">Contact Email</label>
               <input
                 type="email"
                 value={settings.contactEmail}
                 onChange={(e) => handleChange('contactEmail', e.target.value)}
                 required
                 placeholder="hello@luxeagency.com"
-                className="w-full bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white"
+                className="w-full bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs text-text-secondary uppercase tracking-wider">Phone Number</label>
+            <div className="space-y-2">
+              <label className="text-[10px] text-text-secondary uppercase tracking-widest">Phone Number</label>
               <input
                 value={settings.contactPhone}
                 onChange={(e) => handleChange('contactPhone', e.target.value)}
                 placeholder="+886 2 1234 5678"
-                className="w-full bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white"
+                className="w-full bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs text-text-secondary uppercase tracking-wider">Office Address</label>
+          <div className="space-y-2">
+            <label className="text-[10px] text-text-secondary uppercase tracking-widest">Office Address</label>
             <input
               value={settings.officeAddress}
               onChange={(e) => handleChange('officeAddress', e.target.value)}
               placeholder="e.g. 5F, No. 100, Dunhua S. Rd., Taipei, Taiwan"
-              className="w-full max-w-lg bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white"
+              className="w-full max-w-lg bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
             />
           </div>
         </div>
 
         {/* Social Channels Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-primary border-b border-white/5 pb-2">Social Channels</h2>
+        <div className="space-y-6 pt-6">
+          <h2 className="text-sm font-heading font-bold uppercase text-primary border-b border-white/5 pb-2">Social Channels</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-1.5">
-              <label className="text-xs text-text-secondary uppercase tracking-wider">Twitter / X URL</label>
+            <div className="space-y-2">
+              <label className="text-[10px] text-text-secondary uppercase tracking-widest">Twitter / X URL</label>
               <input
                 type="url"
                 value={settings.socialTwitter}
                 onChange={(e) => handleChange('socialTwitter', e.target.value)}
                 placeholder="https://twitter.com/..."
-                className="w-full bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white text-sm"
+                className="w-full bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs text-text-secondary uppercase tracking-wider">Instagram URL</label>
+            <div className="space-y-2">
+              <label className="text-[10px] text-text-secondary uppercase tracking-widest">Instagram URL</label>
               <input
                 type="url"
                 value={settings.socialInstagram}
                 onChange={(e) => handleChange('socialInstagram', e.target.value)}
                 placeholder="https://instagram.com/..."
-                className="w-full bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white text-sm"
+                className="w-full bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs text-text-secondary uppercase tracking-wider">LinkedIn URL</label>
+            <div className="space-y-2">
+              <label className="text-[10px] text-text-secondary uppercase tracking-widest">LinkedIn URL</label>
               <input
                 type="url"
                 value={settings.socialLinkedin}
                 onChange={(e) => handleChange('socialLinkedin', e.target.value)}
                 placeholder="https://linkedin.com/in/..."
-                className="w-full bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary text-white text-sm"
+                className="w-full bg-surface border border-white/10 rounded-sm px-4 py-3 text-sm focus:outline-none focus:border-primary text-white transition-colors"
               />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end pt-4 border-t border-white/5">
+        <div className="flex justify-end pt-8 border-t border-white/5">
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 bg-primary text-background px-6 py-2.5 rounded font-medium hover:bg-white transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 bg-primary text-background px-8 py-3 rounded-sm font-medium hover:bg-white transition-colors disabled:opacity-50 text-sm"
           >
             <Save size={18} />
             {isSaving ? 'Saving Settings...' : 'Save Settings'}
