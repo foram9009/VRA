@@ -16,7 +16,7 @@ export default async function About() {
         <div className="grid md:grid-cols-2 gap-16">
           <div className="reveal">
             <h2 className="text-2xl font-light mb-4 text-primary">Mission</h2>
-            <p className="text-text-secondary leading-relaxed">To elevate brands through intentional design, strategic thinking, and technology that doesn't just function—it performs.</p>
+            <p className="text-text-secondary leading-relaxed">To elevate brands through intentional design, strategic thinking, and technology that doesn&apos;t just function—it performs.</p>
           </div>
           <div className="reveal">
             <h2 className="text-2xl font-light mb-4 text-primary">Vision</h2>

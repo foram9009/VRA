@@ -9,7 +9,7 @@ export default async function Careers() {
     <>
       <div className="pt-32 pb-16 container-custom">
         <h1 className="heading-xl mb-4 reveal">Join Our Team</h1>
-        <p className="text-text-secondary max-w-xl reveal">We're always looking for sharp minds and creative hearts.</p>
+        <p className="text-text-secondary max-w-xl reveal">We&apos;re always looking for sharp minds and creative hearts.</p>
       </div>
 
       <Section>

@@ -5,17 +5,20 @@ import DataTable from '@/components/admin/DataTable';
 import ImageUploader from '@/components/admin/ImageUploader';
 import { createPortfolio, updatePortfolio, deletePortfolio } from '@/actions/portfolio';
 import { Plus, X } from 'lucide-react';
-import { prisma } from '@/lib/prisma'; // Note: In production, fetch via API route or server component props. Client-side fetch shown for modal state sync.
 
 type Portfolio = { id: string; title: string; slug: string; description: string; coverImage: string; categoryId: string; tags: string[] };
 type Category = { id: string; name: string };
+
+type PortfolioActionResult =
+  | { success: true }
+  | { success: false; error: string; details?: unknown };
 
 export default function PortfolioManager() {
   const [items, setItems] = useState<Portfolio[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Portfolio | null>(null);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<Partial<Portfolio>>({});
 
   useEffect(() => {
     // Fetch data in production via getServerSideProps or server component
@@ -30,14 +33,14 @@ export default function PortfolioManager() {
     if (editingItem) form.append('id', editingItem.id);
     form.set('tags', JSON.stringify(formData.tags || []));
 
-    const res = editingItem ? await updatePortfolio(form) : await createPortfolio(form);
-    if (res.success) {
+    const res = editingItem ? await updatePortfolio(editingItem.id, form) : await createPortfolio(form);
+    if (res && typeof res === 'object' && 'success' in res && res.success) {
       setIsModalOpen(false);
       setEditingItem(null);
-      // Refresh list in production via SWR/TanStack Query or re-render
-      window.location.reload(); // Simplified for demo. Use optimistic updates in prod.
+      window.location.reload();
     } else {
-      alert(res.error || 'Operation failed');
+      const errorMessage = res && typeof res === 'object' && 'error' in res && typeof res.error === 'string' ? res.error : 'Operation failed';
+      alert(errorMessage);
     }
   };
 
@@ -67,7 +70,7 @@ export default function PortfolioManager() {
           { key: 'slug', header: 'Slug' },
           { 
             key: 'coverImage', header: 'Cover',
-            render: (item) => <img src={(item as any).coverImage} alt="" className="w-12 h-12 object-cover rounded" />
+            render: (item) => <img src={item.coverImage} alt="" className="w-12 h-12 object-cover rounded" />
           },
           { key: 'categoryId', header: 'Category', render: (item) => categories.find(c => c.id === item.categoryId)?.name || 'Uncategorized' },
         ]}
@@ -98,7 +101,7 @@ export default function PortfolioManager() {
               <ImageUploader 
                 label="Cover Image"
                 value={formData.coverImage}
-                onChange={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+                onChange={(url) => setFormData((prev) => ({ ...prev, coverImage: url }))}
               />
 
               <textarea name="description" defaultValue={formData.description} required rows={3} placeholder="Project Description" className="w-full bg-background border border-white/10 rounded px-3 py-2 focus:outline-none focus:border-primary resize-none" />

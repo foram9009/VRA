@@ -6,16 +6,14 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register GSAP plugins once
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// Register GSAP plugins once (safe to call multiple times)
+gsap.registerPlugin(ScrollTrigger);
 
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // Guard against multiple initializations in Strict Mode
+    // Prevent duplicate initialization (React Strict Mode double-invoke guard)
     if (lenisRef.current) return;
 
     const lenis = new Lenis({
@@ -27,25 +25,24 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
 
     lenisRef.current = lenis;
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    
-    requestAnimationFrame(raf);
-
-    // Sync GSAP ScrollTrigger with Lenis
-    lenis.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
+    // Use ONLY the GSAP ticker — do NOT also add a manual requestAnimationFrame loop.
+    // A dual-loop caused Lenis to be ticked twice per frame (scroll jank + memory leak).
+    const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
-    });
-    
+    };
+
+    gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
-    // Cleanup is handled by ref guard, but we can add listener cleanup if needed
+    // Keep GSAP ScrollTrigger in sync with Lenis scroll position
+    lenis.on('scroll', ScrollTrigger.update);
+
     return () => {
-       // Optional: lenis.destroy() on unmount if necessary for hot-reloading stability
+      // Full cleanup on unmount (important for Next.js hot-reload stability)
+      gsap.ticker.remove(tickerCallback);
+      lenis.off('scroll', ScrollTrigger.update);
+      lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
 

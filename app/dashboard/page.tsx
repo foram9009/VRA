@@ -32,14 +32,14 @@ const StatCard = ({ title, value, icon: Icon, trend }: any) => (
   </div>
 );
 
-const ActivityItem = ({ type, message, time }: any) => {
-  const icon = type === 'success' ? CheckCircle : AlertCircle;
+const ActivityItem = ({ type, message, time }: { type: 'success' | 'warning' | 'info'; message: string; time: string }) => {
+  const Icon = type === 'success' ? CheckCircle : AlertCircle;
   const color = type === 'success' ? 'text-green-400' : 'text-yellow-400';
   
   return (
     <div className="flex items-center gap-4 p-3 hover:bg-white/5 rounded-lg transition-colors">
       <div className={`p-2 bg-white/5 rounded-full ${color}`}>
-        <icon size={16} />
+        <Icon size={16} />
       </div>
       <div className="flex-1">
         <p className="text-sm font-medium text-white">{message}</p>
@@ -61,7 +61,7 @@ export default function DashboardOverview() {
     <div className="space-y-8 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-white mb-2">Overview</h1>
-        <p className="text-text-secondary">Welcome back. Here's what's happening with your agency.</p>
+        <p className="text-text-secondary">Welcome back. Here&apos;s what&apos;s happening with your agency.</p>
       </div>
 
       {/* Stats Grid */}

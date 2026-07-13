@@ -1,32 +1,41 @@
 // middleware.ts
-import NextAuth from 'next-auth';
-import { auth } from '@/lib/auth'; // Import the specific auth function
+import { auth } from '@/lib/auth';
 
 export default auth((req) => {
+  const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
-  const isOnProtectedRoute = req.nextUrl.pathname.startsWith('/admin');
-  
-  // Allow access to login page even if logged in (redirects happen naturally via UI usually, or force redirect to dashboard)
-  const isLoginPage = req.nextUrl.pathname === '/admin/login';
+  const userRole = req.auth?.user?.role as string | undefined;
 
-  if (isOnProtectedRoute && !isLoggedIn) {
+  // ── Route Definitions ──────────────────────────────────────────────────────
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isDashboardRoute = pathname.startsWith('/dashboard');
+  const isProtectedRoute = isAdminRoute || isDashboardRoute;
+  const isLoginPage = pathname === '/admin/login';
+
+  // ── Rule 1: Unauthenticated users cannot access protected routes ───────────
+  if (isProtectedRoute && !isLoggedIn) {
     return Response.redirect(new URL('/admin/login', req.url));
   }
 
-  // Basic role check logic (refined for robustness)
-  if (isOnProtectedRoute && isLoggedIn) {
-    const userRole = req.auth?.user?.role;
-    if (userRole !== 'ADMIN' && userRole !== 'EDITOR') {
+  // ── Rule 2: Authenticated users without ADMIN/EDITOR role are forbidden ────
+  // Must come AFTER the unauthenticated check
+  if (isProtectedRoute && isLoggedIn) {
+    const isAuthorized = userRole === 'ADMIN' || userRole === 'EDITOR';
+    if (!isAuthorized) {
       return Response.redirect(new URL('/', req.url));
     }
   }
 
-  // Redirect logged in users away from login page to dashboard
+  // ── Rule 3: Already-logged-in users redirected away from login page ─────────
+  // Must come AFTER route protection so authorized users can reach login-redirect
   if (isLoginPage && isLoggedIn) {
     return Response.redirect(new URL('/dashboard', req.url));
   }
 });
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  // Exclude Next.js internals, static assets, and API routes from middleware
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };

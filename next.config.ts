@@ -2,9 +2,16 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
-    domains: ['res.cloudinary.com'],
+    // FIX: `domains` was deprecated in Next.js 13. Use `remotePatterns` for
+    // granular control over allowed image sources (hostname, pathname, protocol).
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
   },
   experimental: {
@@ -18,6 +25,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // Recommended: enable output file tracing for optimized Docker/serverless deploys
+  // output: 'standalone',
 };
 
 export default nextConfig;

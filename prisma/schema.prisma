@@ -28,14 +28,14 @@ enum ApplicationStatus {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String   @unique
+  email         String        @unique
   password      String?
   image         String?
-  role          Role     @default(USER)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  role          Role          @default(USER)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   portfolios    Portfolio[]
   blogs         Blog[]
   applications  Application[]
@@ -45,81 +45,94 @@ model User {
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
-  expiresAt DateTime
-  sessionToken String @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  userId       String
+  expiresAt    DateTime
+  sessionToken String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // FIX: FK index — prevents full table scan on session lookup
 }
 
 model Account {
-  id            String   @id @default(cuid())
-  userId        String
-  type          String
-  provider      String
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
   providerAccountId String
-  refresh_token String?  @db.Text
-  access_token  String?  @db.Text
-  expires_at    Int?
-  token_type    String?
-  scope         String?
-  id_token      String?  @db.Text
-  session_state String?
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId]) // FIX: Required by @auth/prisma-adapter for OAuth account linking
+  @@index([userId])                       // FIX: FK index — prevents full table scan
 }
 
 model Portfolio {
-  id            String   @id @default(cuid())
-  title         String
-  slug          String   @unique
-  description   String   @db.Text
-  excerpt       String?
-  coverImage    String
-  images        Json     // [{url, caption}]
-  videoUrl      String?
-  client        String?
-  year          Int?
-  tags          String[]
-  status        Status   @default(DRAFT)
-  authorId      String
-  categoryId    String
-  category      PortfolioCategory @relation(fields: [categoryId], references: [id])
-  author        User     @relation(fields: [authorId], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String            @id @default(cuid())
+  title       String
+  slug        String            @unique
+  description String            @db.Text
+  excerpt     String?
+  coverImage  String
+  images      Json              // [{url, caption}]
+  videoUrl    String?
+  client      String?
+  year        Int?
+  tags        String[]
+  status      Status            @default(DRAFT)
+  authorId    String
+  categoryId  String
+  category    PortfolioCategory @relation(fields: [categoryId], references: [id])
+  author      User              @relation(fields: [authorId], references: [id])
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([authorId])   // FIX: FK index
+  @@index([categoryId]) // FIX: FK index — used heavily in filtered portfolio queries
+  @@index([status])     // FIX: Filters on status are extremely common — index it
 }
 
 model PortfolioCategory {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String    @unique
+  id          String      @id @default(cuid())
+  name        String      @unique
+  slug        String      @unique
   description String?
   portfolios  Portfolio[]
 }
 
 model Blog {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  content     String   @db.Text
-  excerpt     String?
-  coverImage  String
-  status      Status   @default(DRAFT)
-  authorId    String
-  categoryId  String
-  tags        String[]
-  readTime    Int      // minutes
-  author      User     @relation(fields: [authorId], references: [id])
-  category    BlogCategory @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String       @id @default(cuid())
+  title      String
+  slug       String       @unique
+  content    String       @db.Text
+  excerpt    String?
+  coverImage String
+  status     Status       @default(DRAFT)
+  authorId   String
+  categoryId String
+  tags       String[]
+  readTime   Int          // minutes
+  author     User         @relation(fields: [authorId], references: [id])
+  category   BlogCategory @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@index([authorId])   // FIX: FK index
+  @@index([categoryId]) // FIX: FK index — used in category-filtered blog queries
+  @@index([status])     // FIX: Common filter
 }
 
 model BlogCategory {
-  id       String @id @default(cuid())
-  name     String @unique
-  slug     String @unique
-  blogs    Blog[]
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  blogs Blog[]
 }
 
 model Service {
@@ -133,18 +146,22 @@ model Service {
   status      Status   @default(DRAFT)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([status])
 }
 
 model Testimonial {
-  id          String   @id @default(cuid())
-  name        String
-  role        String?
-  company     String?
-  content     String   @db.Text
-  avatar      String?
-  rating      Int      @default(5)
-  status      Status   @default(DRAFT)
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  company   String?
+  content   String   @db.Text
+  avatar    String?
+  rating    Int      @default(5)
+  status    Status   @default(DRAFT)
+  createdAt DateTime @default(now())
+
+  @@index([status])
 }
 
 model Client {
@@ -154,33 +171,40 @@ model Client {
   website   String?
   status    Status   @default(PUBLISHED)
   createdAt DateTime @default(now())
+
+  @@index([status])
 }
 
 model Career {
-  id            String             @id @default(cuid())
-  title         String
-  location      String
-  type          String             // Full-time, Contract, Remote
-  description   String             @db.Text
-  requirements  Json               // [{text}]
-  status        Status             @default(DRAFT)
-  applications  Application[]
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
+  id           String        @id @default(cuid())
+  title        String
+  location     String
+  type         String        // Full-time, Contract, Remote
+  description  String        @db.Text
+  requirements Json          // [{text}]
+  status       Status        @default(DRAFT)
+  applications Application[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([status])
 }
 
 model Application {
-  id              String            @id @default(cuid())
-  careerId        String
-  userId          String?
-  name            String
-  email           String
-  resumeUrl       String
-  coverLetter     String?           @db.Text
-  status          ApplicationStatus @default(APPLIED)
-  career          Career            @relation(fields: [careerId], references: [id])
-  user            User?             @relation(fields: [userId], references: [id])
-  createdAt       DateTime          @default(now())
+  id          String            @id @default(cuid())
+  careerId    String
+  userId      String?
+  name        String
+  email       String
+  resumeUrl   String
+  coverLetter String?           @db.Text
+  status      ApplicationStatus @default(APPLIED)
+  career      Career            @relation(fields: [careerId], references: [id])
+  user        User?             @relation(fields: [userId], references: [id])
+  createdAt   DateTime          @default(now())
+
+  @@index([careerId]) // FIX: FK index
+  @@index([userId])   // FIX: FK index (nullable FK still needs an index)
 }
 
 model Contact {
@@ -192,6 +216,8 @@ model Contact {
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
+
+  @@index([userId]) // FIX: FK index
 }
 
 model Newsletter {
@@ -202,20 +228,20 @@ model Newsletter {
 }
 
 model SiteSetting {
-  id          String   @id @default(cuid())
-  key         String   @unique // heroTitle, heroSubtitle, aboutText, etc.
-  value       Json
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  key       String   @unique // heroTitle, heroSubtitle, aboutText, etc.
+  value     Json
+  updatedAt DateTime @updatedAt
 }
 
 model Media {
-  id          String   @id @default(cuid())
-  url         String
+  id           String   @id @default(cuid())
+  url          String
   cloudinaryId String
-  type        String   // image, video
-  folder      String?
-  size        Int?
-  createdAt   DateTime @default(now())
+  type         String   // image, video
+  folder       String?
+  size         Int?
+  createdAt    DateTime @default(now())
 }
 
 model FAQ {
@@ -225,12 +251,16 @@ model FAQ {
   order     Int      @default(0)
   status    Status   @default(PUBLISHED)
   createdAt DateTime @default(now())
+
+  @@index([status])
 }
 
 model Analytics {
-  id          String   @id @default(cuid())
-  pagePath    String
-  views       Int      @default(0)
-  date        DateTime @default(now())
-  uniqueId    String   @unique // daily per path
+  id       String   @id @default(cuid())
+  pagePath String
+  views    Int      @default(0)
+  date     DateTime @default(now())
+  uniqueId String   @unique // daily per path
+
+  @@index([pagePath]) // FIX: Queried by path frequently for analytics aggregation
 }

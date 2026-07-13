@@ -7,12 +7,14 @@ interface MagneticButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   children: React.ReactNode;
   strength?: number;
   className?: string;
+  asChild?: boolean;
 }
 
 export default function MagneticButton({ 
-  children, 
-  strength = 0.3, 
-  className = '', 
+  children,
+  strength = 0.3,
+  className = '',
+  asChild = false,
   ...props 
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -57,13 +59,19 @@ export default function MagneticButton({
     };
   }, [strength]);
 
+  const commonProps = {
+    ref,
+    className: `relative overflow-hidden ${className}`,
+    onMouseEnter: () => setIsHovering(true),
+    ...props,
+  };
+
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, commonProps);
+  }
+
   return (
-    <button 
-      ref={ref} 
-      className={`relative overflow-hidden ${className}`}
-      onMouseEnter={() => setIsHovering(true)}
-      {...props}
-    >
+    <button {...commonProps}>
       {children}
     </button>
   );

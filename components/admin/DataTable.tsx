@@ -1,6 +1,5 @@
 'use client';
 
-import { Table, Th, Td, Tr } from '@radix-ui/react-tabs'; // Using standard HTML for simplicity & performance
 import { Edit, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

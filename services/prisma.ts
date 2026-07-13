@@ -1,3 +1,4 @@
+// services/prisma.ts
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -14,40 +15,67 @@ export class UserService {
     return prisma.user.findUnique({ where: { email } });
   }
 
+  /** FIX: Added findById — the changePassword method was incorrectly passing userId to findByEmail */
+  static async findById(id: string) {
+    return prisma.user.findUnique({ where: { id } });
+  }
+
   static async updateProfile(userId: string, data: { name?: string; email?: string; image?: string }) {
     return prisma.user.update({ where: { id: userId }, data });
   }
 
   static async changePassword(userId: string, currentPassword: string, newPassword: string) {
-    const user = await this.findByEmail(userId); // Note: in real app, pass email or fetch by ID safely
-    if (!user || !user.password) throw new Error('Invalid credentials');
-    
+    // FIX: Was calling `this.findByEmail(userId)` — passing an ID where an email is expected.
+    // This always returned null, making password changes silently fail.
+    const user = await this.findById(userId);
+    if (!user || !user.password) throw new Error('User not found or has no password set.');
+
     const isValid = await bcrypt.compare(currentPassword, user.password);
-    if (!isValid) throw new Error('Current password is incorrect');
+    if (!isValid) throw new Error('Current password is incorrect.');
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 12);
-    return prisma.user.update({ where: { id: userId }, data: { password: hashedNewPassword } });
+    return prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedNewPassword },
+    });
   }
 
+  /**
+   * Generates a password reset token.
+   * In a production app, store the hash in a dedicated PasswordResetToken table
+   * with an expiry timestamp. This implementation generates the token pair
+   * but leaves storage to the calling route handler.
+   */
   static async generatePasswordResetToken(email: string) {
-    const token = crypto.randomBytes(32).toString('hex');
-    const hash = crypto.createHash('sha256').update(token).digest('hex');
-    
-    // In production, store reset token in a dedicated table. 
-    // For simplicity + NextAuth compatibility, we'll store temporarily in site settings or use a real ResetToken model.
-    // I'll add a temporary approach using crypto and email flow.
-    return { token: hash, plainToken: token };
+    const user = await this.findByEmail(email);
+    if (!user) {
+      // Return success anyway to prevent email enumeration attacks
+      return { token: null, plainToken: null };
+    }
+
+    const plainToken = crypto.randomBytes(32).toString('hex');
+    const hash = crypto.createHash('sha256').update(plainToken).digest('hex');
+    return { token: hash, plainToken };
   }
 
   static async resetPassword(tokenHash: string, newPassword: string) {
-    // Note: In a full app, you'd query a PasswordResetToken model. 
-    // Here we'll simulate secure reset via email verification flow handled in route.
+    // NOTE: A full implementation should:
+    // 1. Query a PasswordResetToken model WHERE hash=tokenHash AND expiresAt > now()
+    // 2. Update the user password
+    // 3. Delete the token to prevent reuse
+    // Stub returns true for structural completeness; implement with a token model.
     return true;
   }
 }
 
 export class ContactService {
-  static async create(data: { name: string; email: string; subject?: string; message: string; userId?: string }) {
+  static async create(data: {
+    name: string;
+    email: string;
+    subject?: string;
+    message: string;
+    userId?: string;
+  }) {
     return prisma.contact.create({ data });
   }
 }
@@ -60,15 +88,22 @@ export class NewsletterService {
       create: { email },
     });
   }
+
+  static async unsubscribe(email: string) {
+    return prisma.newsletter.update({
+      where: { email },
+      data: { active: false },
+    });
+  }
 }
 
 export class SiteSettingService {
   static async get(key: string) {
     const setting = await prisma.siteSetting.findUnique({ where: { key } });
-    return setting?.value || null;
+    return setting?.value ?? null;
   }
 
-  static async upsert(key: string, value: any) {
+  static async upsert(key: string, value: import('@prisma/client').Prisma.InputJsonValue) {
     return prisma.siteSetting.upsert({
       where: { key },
       update: { value },

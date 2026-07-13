@@ -3,8 +3,6 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, MeshDistortMaterial, Environment } from '@react-three/drei';
-// Ensure this package is installed: @react-three/postprocessing
-import { EffectComposer, Bloom } from '@react-three/postprocessing'; 
 import * as THREE from 'three';
 import useMousePosition from '@/lib/useMousePosition';
 
@@ -57,17 +55,7 @@ export default function HeroScene() {
         />
 
         <AnimatedShape />
-
-        {/* Post Processing */}
-        <EffectComposer disableNormalPass>
-          <Bloom 
-            luminanceThreshold={0.9} 
-            mipmapBlur 
-            intensity={1.5} 
-          />
-        </EffectComposer>
       </Canvas>
     </div>
   );
 }
-s

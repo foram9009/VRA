@@ -6,11 +6,21 @@ import ImageUploader from '@/components/admin/ImageUploader';
 import { createBlog, updateBlog, deleteBlog } from '@/actions/blog';
 import { Plus, X } from 'lucide-react';
 
+type BlogItem = {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  coverImage?: string;
+  status: string;
+  createdAt: string;
+};
+
 export default function BlogManager() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<BlogItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<any>(null);
-  const [formData, setFormData] = useState<any>({});
+  const [editingItem, setEditingItem] = useState<BlogItem | null>(null);
+  const [formData, setFormData] = useState<Partial<BlogItem>>({});
 
   useEffect(() => {
     fetch('/api/blog/list').then(res => res.json()).then(setItems);
@@ -23,7 +33,16 @@ export default function BlogManager() {
         <button onClick={() => { setEditingItem(null); setFormData({}); setIsModalOpen(true); }} className="flex items-center gap-2 bg-primary text-background px-4 py-2 rounded-md hover:bg-white transition-colors"><Plus size={18} /> New Post</button>
       </div>
       
-      <DataTable data={items} columns={[{key:'title', header:'Title'}, {key:'status', header:'Status'}, {key:'createdAt', header:'Published', render: (i) => new Date(i.createdAt).toLocaleDateString()}]} onEdit={(i)=>{setEditingItem(i); setFormData(i); setIsModalOpen(true);}} onDelete={deleteBlog} />
+      <DataTable
+        data={items}
+        columns={[
+          { key: 'title', header: 'Title' },
+          { key: 'status', header: 'Status' },
+          { key: 'createdAt', header: 'Published', render: (item) => new Date(item.createdAt).toLocaleDateString() },
+        ]}
+        onEdit={(item) => { setEditingItem(item); setFormData(item); setIsModalOpen(true); }}
+        onDelete={(id) => { void deleteBlog(id); window.location.reload(); }}
+      />
 
       {/* Modal structure identical to Portfolio. Form fields: title, slug, categoryId, coverImage (Uploader), content (textarea), tags */}
       {isModalOpen && (

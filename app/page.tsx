@@ -16,7 +16,7 @@ export default async function Home() {
       <Section id="work">
         <h2 className="heading-lg mb-12 reveal">Selected Work</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.portfolios.map((project) => (
+          {data.portfolios.map((project: (typeof data.portfolios)[number]) => (
             <Link key={project.id} href={`/portfolio/${project.slug}`} className="group relative block overflow-hidden rounded-lg reveal cursor-hover">
               <Image 
                 src={project.coverImage} 
@@ -70,7 +70,7 @@ export default async function Home() {
       <Section id="clients">
         <h3 className="text-center text-text-secondary mb-10 reveal">Trusted By Industry Leaders</h3>
         <div className="flex flex-wrap justify-center gap-12 md:gap-20 opacity-60 reveal">
-          {data.clients.map((client) => (
+          {data.clients.map((client: (typeof data.clients)[number]) => (
             <Image key={client.id} src={client.logoUrl} alt={client.name} width={140} height={40} className="grayscale hover:grayscale-0 transition-all duration-500" />
           ))}
         </div>

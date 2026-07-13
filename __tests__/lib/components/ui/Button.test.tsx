@@ -1,5 +1,6 @@
 // __tests__/components/ui/Button.test.tsx
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { Button } from '@/components/ui/button';
 
 describe('Button Component', () => {

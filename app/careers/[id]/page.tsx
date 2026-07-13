@@ -69,7 +69,7 @@ export default function CareerDetailsPage() {
                   ✓
                 </div>
                 <h3 className="text-xl font-medium mb-2">Application Sent</h3>
-                <p className="text-text-secondary">We'll be in touch shortly.</p>
+                <p className="text-text-secondary">We&apos;ll be in touch shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
