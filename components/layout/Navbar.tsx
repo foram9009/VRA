@@ -45,9 +45,11 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
-          <MagneticButton className="bg-white/10 border border-white/20 text-primary px-5 py-2 rounded-full text-sm hover:bg-primary hover:text-background transition-all duration-300 cursor-hover">
-            Get in Touch
-          </MagneticButton>
+          <Link href="/contact">
+            <MagneticButton className="bg-white/10 border border-white/20 text-primary px-5 py-2 rounded-full text-sm hover:bg-primary hover:text-background transition-all duration-300 cursor-hover">
+              Get in Touch
+            </MagneticButton>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -70,12 +72,19 @@ export default function Navbar() {
           <Link 
             key={link.name} 
             href={link.href}
-            className="text-2xl font-light text-text-secondary hover:text-primary transition-colors"
+            className="text-2xl font-light text-text-secondary hover:text-primary transition-colors cursor-hover"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             {link.name}
           </Link>
         ))}
+        <Link 
+          href="/contact"
+          className="mt-4 bg-primary text-background px-8 py-3 rounded-full text-sm font-semibold hover:bg-white transition-colors cursor-hover uppercase tracking-widest"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          Get in Touch
+        </Link>
       </div>
     </nav>
   );

@@ -45,7 +45,7 @@ export default function AdminLogin() {
 
       <div className="w-full max-w-md bg-card border border-white/5 p-8 rounded-2xl relative z-10 shadow-2xl">
         <div className="text-center mb-8">
-          <span className="text-3xl font-light tracking-widest text-primary block mb-2">LUXE</span>
+          <span className="text-3xl font-light tracking-widest text-primary block mb-2">VRA</span>
           <h2 className="text-xl font-medium text-white">Admin Portal Login</h2>
           <p className="text-text-secondary text-sm mt-1">Enter your credentials to access the dashboard</p>
         </div>

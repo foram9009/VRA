@@ -19,8 +19,10 @@ export default function Section({
   
   if (!animateOnScroll) {
     return (
-      <section id={id} className={cn('container-custom py-24 md:py-32', className)}>
-        {children}
+      <section id={id} className={cn('w-full py-24 md:py-32', className)}>
+        <div className="container-custom">
+          {children}
+        </div>
       </section>
     );
   }
@@ -32,9 +34,11 @@ export default function Section({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={cn('container-custom py-24 md:py-32', className)}
+      className={cn('w-full py-24 md:py-32', className)}
     >
-      {children}
+      <div className="container-custom">
+        {children}
+      </div>
     </motion.section>
   );
 }

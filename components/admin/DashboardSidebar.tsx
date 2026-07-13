@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Image as ImageIcon,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -25,9 +26,10 @@ const navItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Portfolio', href: '/dashboard/portfolio', icon: Layers },
   { name: 'Categories', href: '/dashboard/categories', icon: FolderOpen },
+  { name: 'Services', href: '/dashboard/services', icon: Sparkles },
   { name: 'Blog Posts', href: '/dashboard/blog', icon: FileText },
   { name: 'Careers', href: '/dashboard/careers', icon: Briefcase },
-  { name: 'Users', href: '/dashboard/users', icon: Users },
+  { name: 'Team & Users', href: '/dashboard/users', icon: Users },
   { name: 'Media Library', href: '/dashboard/media', icon: ImageIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];

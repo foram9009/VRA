@@ -4,6 +4,7 @@ import '@/styles/globals.css';
 import MainLayout from '@/components/layout/MainLayout';
 import { SmoothScrollProvider } from '@/providers/SmoothScrollProvider';
 import RevealHelper from '@/components/animations/RevealHelper';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -92,6 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* SmoothScrollProvider initializes Lenis + GSAP ticker for the entire site */}
         <SmoothScrollProvider>
           <RevealHelper />
+          <ScrollToTop />
           <MainLayout>{children}</MainLayout>
         </SmoothScrollProvider>
       </body>

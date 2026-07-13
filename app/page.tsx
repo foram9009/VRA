@@ -4,6 +4,7 @@ import { getHomeData } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
 import NewsletterForm from '@/components/NewsletterForm';
+import TextReveal from '@/components/animations/TextReveal';
 
 
 export const dynamic = 'force-dynamic';
@@ -17,7 +18,7 @@ export default async function Home() {
 
       {/* Featured Projects */}
       <Section id="work">
-        <h2 className="heading-lg mb-12 reveal">Selected Work</h2>
+        <TextReveal text="Selected Work" className="heading-lg mb-12 text-left" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.portfolios.map((project: (typeof data.portfolios)[number]) => (
             <Link
@@ -93,7 +94,7 @@ export default async function Home() {
 
       {/* Clients */}
       <Section id="clients">
-        <h3 className="text-center text-text-secondary mb-10 reveal">Trusted By Industry Leaders</h3>
+        <TextReveal text="Trusted By Industry Leaders" className="text-center text-text-secondary mb-10 text-xs tracking-widest uppercase font-semibold" />
         <div className="flex flex-wrap justify-center gap-12 md:gap-20 opacity-60 reveal">
           {data.clients.map((client: (typeof data.clients)[number]) => (
             <Image key={client.id} src={client.logoUrl} alt={client.name} width={140} height={40} className="grayscale hover:grayscale-0 transition-all duration-500" />
@@ -103,7 +104,7 @@ export default async function Home() {
 
       {/* Newsletter */}
       <Section id="newsletter" className="bg-card rounded-3xl text-center">
-        <h2 className="heading-lg mb-4 reveal">Stay Ahead of the Curve</h2>
+        <TextReveal text="Stay Ahead of the Curve" className="heading-lg mb-4 text-center" />
         <p className="text-text-secondary max-w-xl mx-auto mb-8 reveal">Weekly insights on design, strategy, and technology. No spam, ever.</p>
         <NewsletterForm />
       </Section>
