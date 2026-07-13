@@ -7,7 +7,7 @@ export default auth((req) => {
   const userRole = req.auth?.user?.role as string | undefined;
 
   // ── Route Definitions ──────────────────────────────────────────────────────
-  const isAdminRoute = pathname.startsWith('/admin');
+  const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login';
   const isDashboardRoute = pathname.startsWith('/dashboard');
   const isProtectedRoute = isAdminRoute || isDashboardRoute;
   const isLoginPage = pathname === '/admin/login';
