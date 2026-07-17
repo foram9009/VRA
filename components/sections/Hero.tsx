@@ -3,24 +3,45 @@
 import { motion } from 'framer-motion';
 import MagneticButton from '@/components/ui/MagneticButton';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import HeroSlider, { type HeroSlide } from './HeroSlider';
 
-const HeroScene = dynamic(() => import('./HeroScene'), {
-  ssr: false,
-  loading: () => null,
-});
+// ─── Default slides ───────────────────────────────────────────────────────────
+// Replace src values with your own uploaded images / videos.
+// Video slides: set type: 'video' and point src to an .mp4 / .webm URL.
+const DEFAULT_SLIDES: HeroSlide[] = [
+  {
+    type: 'image',
+    src: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-4.jpg',
+    label: 'Branding & Identity',
+  },
+  {
+    type: 'image',
+    src: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-3.jpg',
+    label: 'Luxury E-Commerce',
+  },
+  {
+    type: 'image',
+    src: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-5.jpg',
+    label: 'Interactive Motion',
+  },
+  {
+    type: 'image',
+    src: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-2.jpg',
+    label: 'Editorial Design',
+  },
+];
 
 export default function Hero() {
   return (
     <section className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden">
-      {/* 3D Background Canvas */}
-      <HeroScene />
+      {/* Image / Video Slider Background */}
+      <HeroSlider slides={DEFAULT_SLIDES} interval={5500} />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background pointer-events-none z-10" />
+      {/* Dark vignette + gradient overlay so text stays readable */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background pointer-events-none z-10" />
 
-      {/* Grid Background Pattern */}
-      <div className="absolute inset-0 z-[5] grid-bg pointer-events-none" />
+      {/* Subtle grid on top */}
+      <div className="absolute inset-0 z-[11] grid-bg pointer-events-none" />
 
       {/* Hero Content */}
       <div className="relative z-20 text-center max-w-6xl mx-auto px-6 w-full">
