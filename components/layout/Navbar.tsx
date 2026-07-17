@@ -31,7 +31,7 @@ export default function Navbar() {
     >
       <div className="container-custom flex items-center justify-between">
         <Link href="/" className="text-2xl font-light tracking-widest text-primary hover:opacity-80 transition-opacity cursor-hover">
-          LUXE
+          VRA
         </Link>
 
         {/* Desktop Nav */}
