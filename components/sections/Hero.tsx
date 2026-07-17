@@ -1,14 +1,13 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import MagneticButton from '@/components/ui/MagneticButton';
 import Link from 'next/link';
 import HeroSlider, { type HeroSlide } from './HeroSlider';
 
-// ─── Default slides ───────────────────────────────────────────────────────────
-// Replace src values with your own uploaded images / videos.
-// Video slides: set type: 'video' and point src to an .mp4 / .webm URL.
-const DEFAULT_SLIDES: HeroSlide[] = [
+// ─── Fallback slides (used when no slides are saved in the database yet) ──────
+const FALLBACK_SLIDES: HeroSlide[] = [
   {
     type: 'image',
     src: 'https://res.cloudinary.com/demo/image/upload/v1672531193/cld-sample-4.jpg',
@@ -32,10 +31,22 @@ const DEFAULT_SLIDES: HeroSlide[] = [
 ];
 
 export default function Hero() {
+  const [slides, setSlides] = useState<HeroSlide[]>(FALLBACK_SLIDES);
+
+  // Fetch DB slides on mount; silently keeps fallbacks if fetch fails
+  useEffect(() => {
+    fetch('/api/hero-slides-public')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.slides?.length) setSlides(data.slides);
+      })
+      .catch(() => {/* keep fallback */});
+  }, []);
+
   return (
     <section className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden">
       {/* Image / Video Slider Background */}
-      <HeroSlider slides={DEFAULT_SLIDES} interval={5500} />
+      <HeroSlider slides={slides} interval={5500} />
 
       {/* Dark vignette + gradient overlay so text stays readable */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background pointer-events-none z-10" />

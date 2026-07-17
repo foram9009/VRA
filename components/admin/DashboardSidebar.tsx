@@ -17,6 +17,7 @@ import {
   X,
   Image as ImageIcon,
   Sparkles,
+  Monitor,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -24,6 +25,7 @@ import { signOut } from 'next-auth/react';
 
 const navItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Hero Slides', href: '/dashboard/hero', icon: Monitor },
   { name: 'Portfolio', href: '/dashboard/portfolio', icon: Layers },
   { name: 'Categories', href: '/dashboard/categories', icon: FolderOpen },
   { name: 'Services', href: '/dashboard/services', icon: Sparkles },
