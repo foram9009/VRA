@@ -136,3 +136,22 @@ export async function deletePortfolio(id: string) {
     return { success: false, error: 'Database error. Please try again.' };
   }
 }
+
+export async function togglePortfolioStatus(id: string, currentStatus: Status) {
+  const session = await auth();
+  if (!session?.user || !requireAdminOrEditor(session.user.role)) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  const newStatus = currentStatus === Status.PUBLISHED ? Status.DRAFT : Status.PUBLISHED;
+
+  try {
+    await prisma.portfolio.update({ where: { id }, data: { status: newStatus } });
+    revalidatePath('/dashboard/portfolio');
+    revalidatePath('/portfolio');
+    return { success: true, newStatus };
+  } catch (e) {
+    console.error('[togglePortfolioStatus]', e);
+    return { success: false, error: 'Database error. Please try again.' };
+  }
+}

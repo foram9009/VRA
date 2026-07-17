@@ -3,11 +3,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import DataTable from '@/components/admin/DataTable';
 import ImageUploader from '@/components/admin/ImageUploader';
-import { createPortfolio, updatePortfolio, deletePortfolio } from '@/actions/portfolio';
+import { createPortfolio, updatePortfolio, deletePortfolio, togglePortfolioStatus } from '@/actions/portfolio';
 import { useRouter } from 'next/navigation';
-import { Plus, X, Loader2 } from 'lucide-react';
+import { Plus, X, Loader2, Eye, EyeOff } from 'lucide-react';
 
-type Portfolio = { id: string; title: string; slug: string; description: string; coverImage: string; categoryId: string; tags: string[] };
+type Portfolio = { id: string; title: string; slug: string; description: string; coverImage: string; categoryId: string; tags: string[]; status: 'DRAFT' | 'PUBLISHED' };
 type Category = { id: string; name: string };
 
 export default function PortfolioManager() {
@@ -77,6 +77,15 @@ export default function PortfolioManager() {
     }
   };
 
+  const handleToggleStatus = async (item: Portfolio) => {
+    const res = await togglePortfolioStatus(item.id, item.status as any);
+    if (res && typeof res === 'object' && 'success' in res && res.success && 'newStatus' in res) {
+      setItems(prev => prev.map(p => p.id === item.id ? { ...p, status: res.newStatus as Portfolio['status'] } : p));
+    } else {
+      alert('Failed to update status.');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -104,6 +113,31 @@ export default function PortfolioManager() {
               render: (item) => <img src={item.coverImage} alt="" className="w-12 h-12 object-cover rounded" />
             },
             { key: 'categoryId', header: 'Category', render: (item) => categories.find(c => c.id === item.categoryId)?.name || 'Uncategorized' },
+            {
+              key: 'status', header: 'Status',
+              render: (item) => (
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                    item.status === 'PUBLISHED'
+                      ? 'bg-green-500/15 text-green-400'
+                      : 'bg-yellow-500/15 text-yellow-400'
+                  }`}>
+                    {item.status === 'PUBLISHED' ? 'Published' : 'Draft'}
+                  </span>
+                  <button
+                    onClick={() => handleToggleStatus(item)}
+                    title={item.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+                    className={`p-1.5 rounded transition-colors ${
+                      item.status === 'PUBLISHED'
+                        ? 'hover:bg-yellow-500/10 text-green-400 hover:text-yellow-400'
+                        : 'hover:bg-green-500/10 text-yellow-400 hover:text-green-400'
+                    }`}
+                  >
+                    {item.status === 'PUBLISHED' ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              )
+            },
           ]}
           onEdit={(item) => { setEditingItem(item); setFormData(item); setIsModalOpen(true); }}
           onDelete={handleDelete}
